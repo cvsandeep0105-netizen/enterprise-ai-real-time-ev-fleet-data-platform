@@ -9,9 +9,9 @@ python-dotenv==1.2.2
 
 pyspark==3.5.8
 
-kafka-python==2.2.15
+kafka-python==2.3.2
 
-PyJWT==2.10.1
+PyJWT==2.13.0
 
 pwdlib[argon2]==0.3.0
 
