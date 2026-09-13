@@ -64,7 +64,7 @@ def test_area27_has_kafka_service():
     text = workflow_text()
 
     assert "kafka:" in text
-    assert "bitnami/kafka:" in text
+    assert "bitnamilegacy/kafka:" in text
     assert "29092:29092" in text
 
 
