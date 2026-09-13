@@ -110,7 +110,7 @@ jobs:
 
       - name: Fresh application contract
         run: |
-          python -c "from app.main import app; paths={getattr(r,'path',None) for r in app.routes}; required={'/','/vehicles','/dashboard/summary','/analytics/battery','/analytics/status','/telemetry/','/alerts/','/auth/login','/health','/ready'}; missing=sorted(required-paths); print('ROUTE COUNT =',len(app.routes)); print('MISSING ROUTES =',missing); assert not missing, missing; print('APPLICATION CONTRACT = PASS')"
+          python -c "from app.main import app; paths={path.rstrip('/') or '/' for path in app.openapi().get('paths',{})}; required={p.rstrip('/') or '/' for p in ('/','/vehicles','/dashboard/summary','/analytics/battery','/analytics/status','/telemetry/','/alerts/','/auth/login','/health','/ready')}; missing=sorted(required-paths); print('OPENAPI ROUTE COUNT =',len(paths)); print('MISSING ROUTES =',missing); assert not missing, missing; print('APPLICATION CONTRACT = PASS')"
 
   frontend-quality:
     name: Frontend Lint & Production Build
