@@ -1,4 +1,4 @@
-﻿from app.observability.health import HealthStatus
+from app.observability.health import HealthStatus
 from app.observability.service import (
     collect_health,
     health_response,
@@ -118,9 +118,8 @@ def test_existing_root_still_available():
     from app.main import app
 
     paths = {
-        route.path.rstrip("/") or "/"
-        for route in app.routes
-        if hasattr(route, "path")
+        path.rstrip("/") or "/"
+        for path in app.openapi().get("paths", {})
     }
 
     assert "/" in paths
@@ -130,9 +129,8 @@ def test_observability_routes_available():
     from app.main import app
 
     paths = {
-        route.path.rstrip("/") or "/"
-        for route in app.routes
-        if hasattr(route, "path")
+        path.rstrip("/") or "/"
+        for path in app.openapi().get("paths", {})
     }
 
     assert "/health" in paths

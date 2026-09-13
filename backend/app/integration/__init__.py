@@ -1,4 +1,4 @@
-﻿"""
+"""
 Area 17 enterprise integration contract.
 """
 
@@ -66,15 +66,10 @@ def _router_paths():
 def _canonical_paths(application):
     _validate_application(application)
 
-    actual = []
-
-    for route in application.routes:
-        if hasattr(route, "path"):
-            actual.append(route.path.rstrip("/") or "/")
-
-    actual.extend(_router_paths())
-
-    return sorted(set(actual))
+    return sorted(
+        path.rstrip("/") or "/"
+        for path in application.openapi().get("paths", {})
+    )
 
 
 def application_routes(application=app):
