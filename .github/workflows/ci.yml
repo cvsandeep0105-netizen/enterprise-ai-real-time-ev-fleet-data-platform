@@ -67,7 +67,7 @@ jobs:
       KAFKA_BROKER: localhost:29092
       KAFKA_TOPIC: ev.telemetry.v1
       PRODUCER_INTERVAL_SECONDS: "2"
-      JWT_SECRET_KEY: ${{ secrets.CI_JWT_SECRET_KEY }}
+      JWT_SECRET_KEY: ${{ secrets.CI_JWT_SECRET_KEY || format('ci-ev-fleet-jwt-secret-{0}-{1}-{2}', github.repository_id, github.run_id, github.run_attempt) }}
       JWT_ALGORITHM: HS256
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: "30"
       CORS_ORIGINS: http://localhost:5173
