@@ -1,0 +1,52 @@
+# ============================================================
+# FRONTEND PRODUCTION DOCKER BUILD CONTEXT
+# ============================================================
+
+# Dependencies
+node_modules
+node_modules/**
+
+# Build output
+dist
+dist/**
+build
+build/**
+coverage
+coverage/**
+
+# Logs
+*.log
+logs
+logs/**
+
+# Test/cache artifacts
+.vite
+.vite/**
+.cache
+.cache/**
+.tmp
+.tmp/**
+
+# IDE / OS
+.vscode
+.vscode/**
+.idea
+.idea/**
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.git/**
+.gitignore
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.tmp
+
+# Local environment
+.env
+.env.*
+!.env.example

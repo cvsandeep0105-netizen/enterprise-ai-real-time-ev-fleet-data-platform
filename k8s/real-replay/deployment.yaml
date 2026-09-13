@@ -1,0 +1,32 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: evfleet-real-replay
+  namespace: ev-fleet
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: evfleet-real-replay
+  template:
+    metadata:
+      labels:
+        app: evfleet-real-replay
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: real-replay
+        image: evfleet-backend:area30-ai-final-v4
+        imagePullPolicy: IfNotPresent
+        command:
+        - python
+        - /tmp/area30_live_real_replay.py
+        volumeMounts:
+        - name: replay-data
+          mountPath: /tmp
+      volumes:
+      - name: replay-data
+        configMap:
+          name: evfleet-real-replay-data

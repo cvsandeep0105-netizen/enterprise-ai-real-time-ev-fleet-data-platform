@@ -1,0 +1,150 @@
+services:
+
+  # ============================================================
+  # ZOOKEEPER
+  # ============================================================
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper
+    restart: unless-stopped
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - ev-network
+
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 10
+      ZOOKEEPER_SYNC_LIMIT: 5
+
+    ports:
+      - "2181:2181"
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "echo srvr | nc -w 2 localhost 2181 | grep -q 'Mode' || exit 1"
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+
+  # ============================================================
+  # KAFKA
+  # ============================================================
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
+    restart: unless-stopped
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - ev-network
+
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+    ports:
+      - "29092:29092"
+
+    environment:
+      KAFKA_BROKER_ID: 1
+
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+      KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS: 60000
+      KAFKA_ZOOKEEPER_SESSION_TIMEOUT_MS: 60000
+
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
+
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:29092
+
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics --bootstrap-server localhost:9092 --list >/dev/null 2>&1 || exit 1"
+        ]
+      interval: 15s
+      timeout: 30s
+      retries: 20
+      start_period: 120s
+
+
+  # ============================================================
+  # SPARK TRANSFORM
+  # ============================================================
+
+  spark-transform:
+    build:
+      context: ./spark
+      dockerfile: Dockerfile
+
+    container_name: spark-transform
+    restart: unless-stopped
+
+    networks:
+      - ev-network
+
+    volumes:
+      - ./spark:/opt/spark/app
+      - ./data_lake:/opt/spark/app/data_lake
+
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+
+      EV_DATA_LAKE: /opt/spark/app/data_lake
+
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=UTC"
+
+    command:
+      - /opt/spark/bin/spark-submit
+      - /opt/spark/app/transform_vehicle_data.py
+
+
+# ==============================================================
+# NETWORK
+# ==============================================================
+
+networks:
+  ev-network:
+    driver: bridge
+
+
+# ==============================================================
+# VOLUMES
+# ==============================================================
+
+volumes:
+  postgres_data:
+  grafana_data:
+  airflow_logs:

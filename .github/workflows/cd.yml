@@ -1,0 +1,102 @@
+name: EV Fleet Data Platform CD
+
+on:
+  workflow_run:
+    workflows:
+      - EV Fleet Data Platform CI
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy Production
+    if: ${{ github.event.workflow_run.conclusion == 'success' && vars.PRODUCTION_DEPLOY_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: latest
+
+      - name: Configure Kubernetes credentials
+        shell: bash
+        env:
+          KUBE_CONFIG_B64: ${{ secrets.KUBE_CONFIG_B64 }}
+        run: |
+          test -n "$KUBE_CONFIG_B64"
+          mkdir -p "$HOME/.kube"
+          echo "$KUBE_CONFIG_B64" | base64 --decode > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+          kubectl cluster-info
+
+      - name: Authenticate to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+
+      - name: Deploy immutable release
+        env:
+          IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
+          IMAGE_OWNER: ${{ github.repository_owner }}
+        run: |
+          kubectl -n ev-fleet set image deployment/evfleet-backend \
+            backend=ghcr.io/${IMAGE_OWNER}/evfleet-backend:${IMAGE_TAG}
+
+          kubectl -n ev-fleet set image deployment/evfleet-frontend \
+            frontend=ghcr.io/${IMAGE_OWNER}/evfleet-frontend:${IMAGE_TAG}
+
+      - name: Wait for rollout
+        run: |
+          kubectl -n ev-fleet rollout status deployment/evfleet-backend --timeout=180s
+          kubectl -n ev-fleet rollout status deployment/evfleet-frontend --timeout=180s
+
+      - name: Production smoke test
+        shell: bash
+        run: |
+          BACKEND_POD=$(kubectl -n ev-fleet get pods \
+            -l app=evfleet-backend \
+            -o jsonpath='{.items[0].metadata.name}')
+          FRONTEND_POD=$(kubectl -n ev-fleet get pods \
+            -l app=evfleet-frontend \
+            -o jsonpath='{.items[0].metadata.name}')
+
+          test -n "$BACKEND_POD"
+          test -n "$FRONTEND_POD"
+
+          kubectl -n ev-fleet exec "$BACKEND_POD" -- \
+            python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8000/', timeout=10).read().decode())"
+
+          kubectl -n ev-fleet exec "$FRONTEND_POD" -- \
+            wget -qO- http://127.0.0.1/health
+
+      - name: Deployment summary
+        run: |
+          echo "Production deployment: PASS"
+          echo "Release SHA: ${{ github.event.workflow_run.head_sha }}"
+
+      - name: Automatic rollback
+        if: failure()
+        run: |
+          echo "Deployment failed - rolling back"
+          kubectl -n ev-fleet rollout undo deployment/evfleet-backend || true
+          kubectl -n ev-fleet rollout undo deployment/evfleet-frontend || true
+          kubectl -n ev-fleet rollout status deployment/evfleet-backend --timeout=180s || true
+          kubectl -n ev-fleet rollout status deployment/evfleet-frontend --timeout=180s || true
+          exit 1

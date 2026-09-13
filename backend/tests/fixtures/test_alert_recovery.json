@@ -1,0 +1,9 @@
+{
+  "vehicle_id": "TEST_ALERT_LIFECYCLE_001",
+  "battery": 50,
+  "temperature": 35,
+  "speed": 60,
+  "vehicle_status": "MOVING",
+  "charging_status": "NOT_CHARGING",
+  "timestamp": "2026-08-17T16:05:00"
+}

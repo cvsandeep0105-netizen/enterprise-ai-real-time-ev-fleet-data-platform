@@ -1,0 +1,75 @@
+@use "./variables" as *;
+/* Reset */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+
+body {
+  font-family: $font-family;
+  background-color: $background-color;
+  color: $text-primary;
+  min-height: 100vh;
+}
+
+/* Root */
+
+#root {
+  min-height: 100vh;
+}
+
+/* Links */
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Lists */
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* Images */
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Buttons */
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Inputs */
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9e9e9e;
+}

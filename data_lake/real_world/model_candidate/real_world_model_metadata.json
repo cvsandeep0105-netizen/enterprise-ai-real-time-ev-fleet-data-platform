@@ -1,0 +1,25 @@
+{
+  "features": [
+    "battery_soc",
+    "battery_voltage",
+    "speed",
+    "battery_temp"
+  ],
+  "algorithm": "IsolationForest",
+  "version": 1,
+  "model_version": "real-world-1.0.0",
+  "model_id": "ev-real-world-246ed84e894d",
+  "trained_at": "2026-09-06T11:50:29.316178+00:00",
+  "training_rows": 6600,
+  "evaluation_rows": 1651,
+  "feature_count": 4,
+  "n_estimators": 300,
+  "random_state": 42,
+  "synthetic_abnormal_evaluation_rows": 1651,
+  "synthetic_abnormal_precision": 0.7573394495412844,
+  "synthetic_abnormal_recall": 1.0,
+  "synthetic_abnormal_f1": 0.8619159488384234,
+  "artifact_path": "/models/real_world_ev_anomaly_isolation_forest.joblib",
+  "artifact_size_bytes": 4079650,
+  "artifact_sha256": "b386e03c2452eae18a0727aa32fcd710ed8dda875e35de79e9e591fc98019a6f"
+}

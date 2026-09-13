@@ -1,0 +1,45 @@
+{
+  "area": 28,
+  "title": "Performance & Scalability",
+  "started_at": "2026-09-02T20:22:55.418277",
+  "checks": {
+    "API concurrency performance": {
+      "status": "PASS",
+      "details": {
+        "requests": 60,
+        "concurrency": 10,
+        "successful": 60,
+        "min_ms": 59.532,
+        "mean_ms": 150.191,
+        "p50_ms": 142.563,
+        "p95_ms": 267.733,
+        "max_ms": 297.638,
+        "wall_time_ms": 948.423
+      }
+    },
+    "PostgreSQL 20K scalability and query plan": {
+      "status": "PASS",
+      "details": {
+        "row_count": 20000,
+        "samples": 20,
+        "min_ms": 4.091,
+        "mean_ms": 5.1,
+        "p50_ms": 5.022,
+        "p95_ms": 7.184,
+        "index_name": "uq_ev_data_vehicle_timestamp",
+        "scan_direction": "Backward",
+        "actual_rows": 50,
+        "execution_time_ms": 0.056,
+        "shared_read_blocks": 0,
+        "temp_read_blocks": 0,
+        "temp_written_blocks": 0
+      }
+    },
+    "Complete backend test suite": {
+      "status": "FAIL",
+      "error": "Backend test suite failed:\n\nC:\\Users\\sandeep\\AppData\\Local\\Programs\\Python\\Python311\\python.exe: No module named pytest\n"
+    }
+  },
+  "status": "FAIL",
+  "completed_at": "2026-09-02T20:22:56.908149"
+}

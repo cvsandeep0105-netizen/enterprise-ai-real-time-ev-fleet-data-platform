@@ -1,35 +1,143 @@
+# ============================================================
+# EV FLEET DATA PLATFORM - GIT IGNORE
+# ============================================================
+
 # Python
 __pycache__/
 *.py[cod]
 *.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# Virtual Environment
+# Virtual environments
 .venv/
 venv/
 env/
 
-# Environment Variables
+# Environment / Secrets
 .env
+.env.*
+!.env.example
 
-# VS Code
+# IDE / OS
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db
 
 # Logs
 logs/
 *.log
 
-# Python Cache
-.pytest_cache/
-.mypy_cache/
-
-# Build Files
+# Build artifacts
 build/
 dist/
 *.egg-info/
 
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Database / Local Backups
+*.sql
+*.sql.gz
+*.dump
+*.backup
+backups/
+
+# Generated / Temporary Data
+output/
+artifacts/
+*.tmp
+*.temp
+*.bak
+*.orig
+
 # Jupyter
 .ipynb_checkpoints/
 
-# OS Files
-.DS_Store
-Thumbs.db
+# Airflow Runtime
+airflow/logs/
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow/*.db
+airflow/*.sqlite
+airflow/*.sqlite3
+
+# Local Recovery / Archive Data
+docs/archive/
+docs/evidence/
+
+# Local Area 27 Safety Snapshots
+_area27_cleanup_snapshot_*/
+
+# Local Area 30 AI virtual environment
+.area30-ai-venv/
+
+
+# ============================================================
+# Real-World Dataset / Large Data Lake Files
+# Keep large raw/canonical Parquet and downloaded archives local.
+# Dataset provenance and reproducible processing scripts remain
+# version-controlled.
+# ============================================================
+
+data_lake/real_world/tum_ev_uds/*.zip
+data_lake/real_world/tum_ev_uds/**/*.zip
+data_lake/real_world/tum_ev_uds/**/data/**/*.parquet
+data_lake/real_world/canonical/*.parquet
+data_lake/real_world/features/*.parquet
+data_lake/real_world/real_world_ai_dataset.parquet
+
+# Local ML training/runtime artifacts
+data_lake/real_world/model_candidate/*.joblib
+backend/models/*.joblib
+
+# Local runtime / generated replay data
+scripts/*.ndjson
+
+# Local repository build / backup artifacts
+k8s/real-replay/evfleet-real-replay.tar
+frontend/src/components/AIInsightsPanel.jsx.area30-pre-real-fleet.bak
+
+# ============================================================
+# Local troubleshooting / historical repair artifacts
+# Keep reproducible production scripts; exclude one-off fixes.
+# ============================================================
+
+scripts/diagnose_real_replay.py
+scripts/diagnose_replay_conflicts.py
+scripts/diagnose_replay_conflicts_v2.py
+scripts/diagnose_replay_conflicts_v3.py
+scripts/area30_final_replay.ndjson
+scripts/area30_real.ndjson
+
+fix_real_world_ai_api.py
+integrate_real_world_ai_api.py
+real_world_ai_integration_precheck.py
+restore_ai_api.py
+
+backend/app/ai/anomaly.area30-before-compatibility-fix.py
+frontend/src/components/AIInsightsPanel.jsx.area30-pre-real-fleet.bak
+
+k8s/real-replay/evfleet-real-replay.tar
+
+# Downloaded third-party real-world dataset release.
+# Keep the dataset local; repository contains only project
+# provenance/reproducibility metadata and processing code.
+data_lake/real_world/tum_ev_uds/release/
+
+# Local Hadoop/Windows runtime binaries
+hadoop/bin/*.dll
+hadoop/bin/*.exe
+
+# Real-world replay payload
+k8s/real-replay/*.ndjson
+
+# Generated Airflow runtime data
+airflow/data/*.csv

@@ -1,0 +1,10 @@
+{
+  "target": "http://127.0.0.1:8000/",
+  "requests": 20,
+  "successful_requests": 20,
+  "min_ms": 18.872,
+  "mean_ms": 35.933,
+  "p50_ms": 29.649,
+  "p95_ms": 77.278,
+  "max_ms": 77.278
+}

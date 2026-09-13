@@ -1,0 +1,101 @@
+# ============================================================
+# EV FLEET DATA PLATFORM - ROOT DOCKER BUILD CONTEXT
+# ============================================================
+
+# Git / CI metadata
+.git/
+.git/**
+.github/
+.github/**
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python caches
+__pycache__/
+__pycache__/**
+*.py[cod]
+*.pyo
+.pytest_cache/
+.pytest_cache/**
+.mypy_cache/
+.mypy_cache/**
+.ruff_cache/
+.ruff_cache/**
+.coverage
+htmlcov/
+
+# Node dependencies / generated frontend output
+node_modules/
+node_modules/**
+frontend/node_modules/
+frontend/node_modules/**
+frontend/dist/
+frontend/dist/**
+
+# Build artifacts
+dist/
+dist/**
+build/
+build/**
+coverage/
+coverage/**
+
+# Airflow runtime
+airflow/logs/
+airflow/logs/**
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow/*.db
+airflow/*.sqlite
+airflow/*.sqlite3
+
+# Generated / temporary data
+output/
+output/**
+tmp/
+tmp/**
+temp/
+temp/**
+*.tmp
+*.temp
+*.log
+
+# Generated data files
+*.parquet
+*.parquet/**
+*.csv
+*.csv/**
+*.jsonl
+
+# Runtime AI model artifacts
+backend/models/
+backend/models/**
+models/
+models/**
+
+# Docker / local Kubernetes state
+docker-data/
+docker-data/**
+k8s/.cache/
+k8s/.cache/**
+
+# IDE / OS
+.vscode/
+.vscode/**
+.idea/
+.idea/**
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Documentation / temporary noise
+*.bak
+*.backup
+*.orig
+data_lake/
+performance/

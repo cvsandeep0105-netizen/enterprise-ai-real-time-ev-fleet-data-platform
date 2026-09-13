@@ -1,0 +1,137 @@
+{
+  "database": "airflow",
+  "tables": [
+    "alerts",
+    "ev_data",
+    "vehicles"
+  ],
+  "row_counts": {
+    "alerts": 0,
+    "ev_data": 20000,
+    "vehicles": 0
+  },
+  "indexes": {
+    "alerts": [
+      {
+        "name": "alerts_pkey",
+        "definition": "CREATE UNIQUE INDEX alerts_pkey ON public.alerts USING btree (id)"
+      },
+      {
+        "name": "idx_alerts_vehicle_status_timestamp",
+        "definition": "CREATE INDEX idx_alerts_vehicle_status_timestamp ON public.alerts USING btree (vehicle_id, status, \"timestamp\")"
+      },
+      {
+        "name": "ix_alerts_vehicle_id",
+        "definition": "CREATE INDEX ix_alerts_vehicle_id ON public.alerts USING btree (vehicle_id)"
+      }
+    ],
+    "ev_data": [
+      {
+        "name": "ev_data_pkey",
+        "definition": "CREATE UNIQUE INDEX ev_data_pkey ON public.ev_data USING btree (id)"
+      },
+      {
+        "name": "idx_ev_data_vehicle_timestamp",
+        "definition": "CREATE INDEX idx_ev_data_vehicle_timestamp ON public.ev_data USING btree (vehicle_id, \"timestamp\")"
+      },
+      {
+        "name": "ix_ev_data_event_id",
+        "definition": "CREATE UNIQUE INDEX ix_ev_data_event_id ON public.ev_data USING btree (event_id)"
+      },
+      {
+        "name": "ix_ev_data_timestamp",
+        "definition": "CREATE INDEX ix_ev_data_timestamp ON public.ev_data USING btree (\"timestamp\")"
+      },
+      {
+        "name": "ix_ev_data_vehicle_id",
+        "definition": "CREATE INDEX ix_ev_data_vehicle_id ON public.ev_data USING btree (vehicle_id)"
+      },
+      {
+        "name": "uq_ev_data_vehicle_timestamp",
+        "definition": "CREATE UNIQUE INDEX uq_ev_data_vehicle_timestamp ON public.ev_data USING btree (vehicle_id, \"timestamp\")"
+      }
+    ],
+    "vehicles": [
+      {
+        "name": "vehicles_pkey",
+        "definition": "CREATE UNIQUE INDEX vehicles_pkey ON public.vehicles USING btree (id)"
+      }
+    ]
+  },
+  "query_timings_ms": {
+    "telemetry_count": 8.041,
+    "vehicle_lookup": 13.811,
+    "vehicle_time_range": 8.303,
+    "active_alerts": 3.427
+  },
+  "vehicle_lookup_plan": {
+    "Plan": {
+      "Node Type": "Limit",
+      "Parallel Aware": false,
+      "Startup Cost": 0.29,
+      "Total Cost": 39.94,
+      "Plan Rows": 50,
+      "Plan Width": 49,
+      "Actual Startup Time": 0.029,
+      "Actual Total Time": 0.052,
+      "Actual Rows": 50,
+      "Actual Loops": 1,
+      "Shared Hit Blocks": 4,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Index Scan",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Scan Direction": "Backward",
+          "Index Name": "uq_ev_data_vehicle_timestamp",
+          "Relation Name": "ev_data",
+          "Alias": "ev_data",
+          "Startup Cost": 0.29,
+          "Total Cost": 793.35,
+          "Plan Rows": 1000,
+          "Plan Width": 49,
+          "Actual Startup Time": 0.027,
+          "Actual Total Time": 0.044,
+          "Actual Rows": 50,
+          "Actual Loops": 1,
+          "Index Cond": "((vehicle_id)::text = 'EV-001'::text)",
+          "Rows Removed by Index Recheck": 0,
+          "Shared Hit Blocks": 4,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.129,
+    "Triggers": [],
+    "Execution Time": 0.102
+  }
+}

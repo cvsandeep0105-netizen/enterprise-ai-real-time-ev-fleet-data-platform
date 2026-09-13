@@ -1,0 +1,9 @@
+﻿{
+  "vehicle_id": "TEST_ALERT_001",
+  "battery": 5,
+  "speed": 130,
+  "temp": 85,
+  "charging_status": "NOT_CHARGING",
+  "vehicle_status": "MOVING",
+  "timestamp": "2026-08-14T10:30:00"
+}
