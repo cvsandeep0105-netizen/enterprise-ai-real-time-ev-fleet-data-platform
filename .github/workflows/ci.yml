@@ -1,4 +1,4 @@
-﻿name: EV Fleet Data Platform CI
+name: EV Fleet Data Platform CI
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        image: postgres:16-alpine
         env:
           POSTGRES_DB: airflow
           POSTGRES_USER: airflow
@@ -30,10 +30,10 @@ jobs:
         ports:
           - 5433:5432
         options: >-
-          --health-cmd="pg_isready -U airflow -d airflow"
+          --health-cmd="pg_isready -h 127.0.0.1 -U airflow -d airflow"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=10
+          --health-retries=30
 
       kafka:
         image: bitnamilegacy/kafka:3.7.1-debian-12-r4
@@ -313,5 +313,3 @@ jobs:
           echo "Docker validation     = PASS"
           echo "Kubernetes validation = PASS"
           echo "AREA 27 CI GATE       = PASS"
-
-
